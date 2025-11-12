@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
@@ -17,28 +18,30 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <div className="min-h-screen flex flex-col">
-          <Header />
-          <main className="flex-1">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/find-partners" element={<FindPartners />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-              <Route path="/create-profile" element={<PrivateRoute><CreateProfile /></PrivateRoute>} />
-              <Route path="/my-connections" element={<PrivateRoute><MyConnections /></PrivateRoute>} />
-              <Route path="/partner/:id" element={<PrivateRoute><PartnerDetails /></PrivateRoute>} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-          <Footer />
-          <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
-        </div>
-      </Router>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors">
+            <Header />
+            <main className="flex-1">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/find-partners" element={<FindPartners />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+                <Route path="/create-profile" element={<PrivateRoute><CreateProfile /></PrivateRoute>} />
+                <Route path="/my-connections" element={<PrivateRoute><MyConnections /></PrivateRoute>} />
+                <Route path="/partner/:id" element={<PrivateRoute><PartnerDetails /></PrivateRoute>} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
+            <Footer />
+            <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
+          </div>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 
