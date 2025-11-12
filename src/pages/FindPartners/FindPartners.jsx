@@ -166,9 +166,9 @@ const FindPartners = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">
+        <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-900 dark:text-white mb-12">
           Find Study Partners
         </h1>
 
@@ -179,7 +179,7 @@ const FindPartners = () => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
             >
               <option value="">Sort By</option>
               <option value="name">Name</option>
@@ -195,7 +195,7 @@ const FindPartners = () => {
                 placeholder="Search by subject or name..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 w-64"
+                className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 w-64 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               />
             </div>
           </div>
@@ -204,18 +204,18 @@ const FindPartners = () => {
         {/* Partners Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredPartners.map((partner) => (
-            <div key={partner._id} className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+            <div key={partner._id} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300">
               <div className="text-center">
                 <img
                   src={partner.profileimage}
                   alt={partner.name}
                   className="w-20 h-20 rounded-full object-cover mx-auto mb-4"
                 />
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">{partner.name}</h3>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{partner.name}</h3>
                 <p className="text-indigo-600 font-medium mb-2">{partner.subject}</p>
                 <div className="space-y-1 mb-4">
-                  <p className="text-sm text-gray-600">Mode: {partner.studyMode}</p>
-                  <p className="text-sm text-gray-600">Level: {partner.experienceLevel}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Mode: {partner.studyMode}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Level: {partner.experienceLevel}</p>
                 </div>
                 <button
                   onClick={() => handleViewProfile(partner._id)}
@@ -230,7 +230,7 @@ const FindPartners = () => {
 
         {filteredPartners.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">No partners found matching your criteria.</p>
+            <p className="text-gray-500 dark:text-gray-400 text-lg">No partners found matching your criteria.</p>
           </div>
         )}
       </div>

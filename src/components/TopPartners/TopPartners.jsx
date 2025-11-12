@@ -69,22 +69,22 @@ const TopPartners = () => {
   }
 
   return (
-    <section className="py-16 md:py-20 bg-gray-50">
+    <section className="py-16 md:py-20 bg-gray-50 dark:bg-gray-900 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">
+        <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 dark:text-white mb-12">
           Top Study Partners
         </h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
           {partners.map((partner) => (
-            <div key={partner._id} className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 h-full flex flex-col text-center">
+            <div key={partner._id} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 h-full flex flex-col text-center">
               <img 
                 src={partner.profileImage} 
                 alt={partner.name} 
                 className="w-20 h-20 rounded-full object-cover mx-auto mb-6"
               />
               
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">{partner.name}</h3>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">{partner.name}</h3>
               
               <div className="flex flex-wrap justify-center gap-2 mb-4">
                 {partner.subjects.map((subject, index) => (
@@ -104,7 +104,7 @@ const TopPartners = () => {
               
               <div className="flex items-center justify-center gap-2 mb-6">
                 <FaStar className="text-yellow-400" />
-                <span className="font-semibold text-gray-900">{partner.rating}</span>
+                <span className="font-semibold text-gray-900 dark:text-white">{partner.rating}</span>
               </div>
               
               <button 
