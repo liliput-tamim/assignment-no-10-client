@@ -229,8 +229,23 @@ const FindPartners = () => {
         </div>
 
         {filteredPartners.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500 dark:text-gray-400 text-lg">No partners found matching your criteria.</p>
+          <div className="text-center py-16">
+            <div className="max-w-md mx-auto">
+              <div className="w-24 h-24 mx-auto mb-6 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
+                <FaSearch className="w-10 h-10 text-gray-400" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No Partners Found</h3>
+              <p className="text-gray-500 dark:text-gray-400 mb-6">We couldn't find any study partners matching your search criteria.</p>
+              <button
+                onClick={() => {
+                  setSearchTerm('');
+                  setSortBy('');
+                }}
+                className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                Clear Filters
+              </button>
+            </div>
           </div>
         )}
       </div>
