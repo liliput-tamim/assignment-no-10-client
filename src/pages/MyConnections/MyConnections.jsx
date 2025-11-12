@@ -18,8 +18,13 @@ const MyConnections = () => {
 
   const fetchConnections = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/partner-requests?email=${user.email}`);
-      setConnections(response.data);
+      const token = await user.getIdToken();
+      const response = await axios.get('http://localhost:3001/api/partner-requests', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setConnections(response.data.requests || response.data);
     } catch (error) {
       console.error('Error fetching connections:', error);
       // Mock data for development
@@ -31,6 +36,38 @@ const MyConnections = () => {
           subject: 'Mathematics',
           studyMode: 'Online',
           partnerId: '1'
+        },
+        {
+          _id: '2',
+          partnerName: 'Mike Chen',
+          partnerImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+          subject: 'Programming',
+          studyMode: 'Offline',
+          partnerId: '2'
+        },
+        {
+          _id: '3',
+          partnerName: 'Emily Davis',
+          partnerImage: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+          subject: 'Biology',
+          studyMode: 'Online',
+          partnerId: '3'
+        },
+        {
+          _id: '4',
+          partnerName: 'Ahmed Hassan',
+          partnerImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face',
+          subject: 'Physics',
+          studyMode: 'Offline',
+          partnerId: '4'
+        },
+        {
+          _id: '5',
+          partnerName: 'Lisa Wang',
+          partnerImage: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
+          subject: 'Chemistry',
+          studyMode: 'Online',
+          partnerId: '5'
         }
       ]);
     } finally {
@@ -41,11 +78,16 @@ const MyConnections = () => {
   const handleDelete = async (connectionId) => {
     if (window.confirm('Are you sure you want to delete this connection?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/partner-requests/${connectionId}`);
+        const token = await user.getIdToken();
+        await axios.delete(`http://localhost:3001/api/partner-requests/${connectionId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
         setConnections(connections.filter(conn => conn._id !== connectionId));
         toast.success('Connection deleted successfully!');
       } catch (error) {
-        toast.error('Failed to delete connection');
+        toast.error(error.response?.data?.message || 'Failed to delete connection');
         console.error(error);
       }
     }
@@ -112,6 +154,9 @@ const MyConnections = () => {
                             src={connection.partnerImage}
                             alt={connection.partnerName}
                             className="w-10 h-10 rounded-full object-cover mr-4"
+                            onError={(e) => {
+                              e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(connection.partnerName)}&background=4f46e5&color=fff&size=150`;
+                            }}
                           />
                           <div>
                             <div className="text-sm font-medium text-gray-900">

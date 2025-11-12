@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { FaTimes } from 'react-icons/fa';
+import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
 
 const UpdateModal = ({ connection, onClose, onSuccess }) => {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     partnerName: connection.partnerName,
@@ -23,11 +25,16 @@ const UpdateModal = ({ connection, onClose, onSuccess }) => {
     setLoading(true);
 
     try {
-      const response = await axios.put(`http://localhost:5000/api/partner-requests/${connection._id}`, formData);
+      const token = await user.getIdToken();
+      const response = await axios.put(`http://localhost:3001/api/partner-requests/${connection._id}`, formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       toast.success('Connection updated successfully!');
       onSuccess(response.data);
     } catch (error) {
-      toast.error('Failed to update connection');
+      toast.error(error.response?.data?.message || 'Failed to update connection');
       console.error(error);
     } finally {
       setLoading(false);

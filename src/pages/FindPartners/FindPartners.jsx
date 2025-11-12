@@ -20,13 +20,11 @@ const FindPartners = () => {
   }, [partners, searchTerm, sortBy]);
 
   const fetchPartners = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/api/profiles');
-      setPartners(response.data);
-    } catch (error) {
-      console.error('Error fetching partners:', error);
-      // Mock data for development
-      setPartners([
+    // Set loading to false immediately and show mock data
+    setLoading(false);
+    
+    // Mock data for development (always available)
+    const mockData = [
         {
           _id: '1',
           name: 'Sarah Johnson',
@@ -123,9 +121,19 @@ const FindPartners = () => {
           studyMode: 'Offline',
           experienceLevel: 'Beginner'
         }
-      ]);
-    } finally {
-      setLoading(false);
+      ];
+    
+    setPartners(mockData);
+    
+    // Try to fetch from API in background
+    try {
+      const response = await axios.get('http://localhost:3001/api/profiles');
+      const partnersData = response.data.profiles || response.data || [];
+      if (partnersData.length > 0) {
+        setPartners(partnersData);
+      }
+    } catch (error) {
+      console.log('API not available, using mock data');
     }
   };
 

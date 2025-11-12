@@ -18,7 +18,7 @@ const PartnerDetails = () => {
 
   const fetchPartnerDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/profiles/${id}`);
+      const response = await axios.get(`http://localhost:3001/api/profiles/${id}`);
       setPartner(response.data);
     } catch (error) {
       console.error('Error fetching partner details:', error);
@@ -42,25 +42,40 @@ const PartnerDetails = () => {
   };
 
   const handleSendRequest = async () => {
+    if (!user) {
+      toast.error('Please login to send partner request');
+      return;
+    }
+
     setRequesting(true);
     try {
+      const token = await user.getIdToken();
+      
       // Send partner request
-      await axios.post('http://localhost:5000/api/partner-requests', {
+      await axios.post('http://localhost:3001/api/partner-requests', {
         partnerId: partner._id,
         partnerName: partner.name,
         partnerImage: partner.profileimage,
         subject: partner.subject,
         studyMode: partner.studyMode,
         requesterEmail: user.email
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       // Increment partner count
-      await axios.patch(`http://localhost:5000/api/profiles/${partner._id}/increment`);
+      await axios.patch(`http://localhost:3001/api/profiles/${partner._id}/increment`, {}, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
 
       toast.success('Partner request sent successfully!');
       setPartner(prev => ({ ...prev, patnerCount: prev.patnerCount + 1 }));
     } catch (error) {
-      toast.error('Failed to send partner request');
+      toast.error(error.response?.data?.message || 'Failed to send partner request');
       console.error(error);
     } finally {
       setRequesting(false);
