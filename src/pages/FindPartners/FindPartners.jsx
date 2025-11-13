@@ -173,31 +173,54 @@ const FindPartners = () => {
         </h1>
 
         {/* Search and Sort Controls */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0">
-          <div className="flex items-center space-x-2">
-            <FaSort className="text-gray-500" />
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-            >
-              <option value="">Sort By</option>
-              <option value="name">Name</option>
-              <option value="experience">Experience Level</option>
-            </select>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <div className="relative">
-              <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search by subject or name..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 w-64 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-              />
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8 transition-colors">
+          <div className="flex flex-col lg:flex-row gap-4 items-center">
+            <div className="flex-1 w-full lg:w-auto">
+              <div className="relative">
+                <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search by subject, name, or skills..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all"
+                />
+              </div>
             </div>
+            
+            <div className="flex items-center gap-3">
+              <div className="flex items-center space-x-2">
+                <FaSort className="text-gray-500 dark:text-gray-400" />
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white min-w-[140px]"
+                >
+                  <option value="">Sort By</option>
+                  <option value="name">Name</option>
+                  <option value="experience">Experience</option>
+                </select>
+              </div>
+              
+              {(searchTerm || sortBy) && (
+                <button
+                  onClick={() => {
+                    setSearchTerm('');
+                    setSortBy('');
+                  }}
+                  className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+          </div>
+          
+          <div className="mt-4 flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+            <span>{filteredPartners.length} partner{filteredPartners.length !== 1 ? 's' : ''} found</span>
+            {searchTerm && (
+              <span>Searching for: <span className="font-medium text-indigo-600 dark:text-indigo-400">"{searchTerm}"</span></span>
+            )}
           </div>
         </div>
 
@@ -229,21 +252,21 @@ const FindPartners = () => {
         </div>
 
         {filteredPartners.length === 0 && (
-          <div className="text-center py-16">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-12 text-center">
             <div className="max-w-md mx-auto">
-              <div className="w-24 h-24 mx-auto mb-6 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-                <FaSearch className="w-10 h-10 text-gray-400" />
+              <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900 dark:to-purple-900 rounded-full flex items-center justify-center">
+                <FaSearch className="w-8 h-8 text-indigo-600 dark:text-indigo-400" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No Partners Found</h3>
-              <p className="text-gray-500 dark:text-gray-400 mb-6">We couldn't find any study partners matching your search criteria.</p>
+              <p className="text-gray-500 dark:text-gray-400 mb-6">Try adjusting your search terms or clear filters to see all partners.</p>
               <button
                 onClick={() => {
                   setSearchTerm('');
                   setSortBy('');
                 }}
-                className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+                className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-all duration-200 hover:scale-105 shadow-md hover:shadow-lg"
               >
-                Clear Filters
+                Show All Partners
               </button>
             </div>
           </div>
