@@ -26,13 +26,18 @@ const UpdateModal = ({ connection, onClose, onSuccess }) => {
 
     try {
       const token = await user.getIdToken();
-      const response = await axios.put(`http://localhost:4000/requests/${connection._id}`, formData, {
+      // Update request with message field
+      const updateData = {
+        message: `Updated: ${formData.subject} - ${formData.studyMode}`
+      };
+      
+      await axios.put(`http://localhost:4000/requests/${connection._id}`, updateData, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      toast.success('Connection updated successfully!');
-      onSuccess(response.data);
+      
+      onSuccess({ ...connection, ...formData });
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to update connection');
       console.error(error);

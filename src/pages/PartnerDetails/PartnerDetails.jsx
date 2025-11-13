@@ -18,7 +18,7 @@ const PartnerDetails = () => {
 
   const fetchPartnerDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:3001/api/profiles/${id}`);
+      const response = await axios.get(`http://localhost:4000/partners/${id}`);
       setPartner(response.data);
     } catch (error) {
       console.error('Error fetching partner details:', error);
@@ -52,13 +52,9 @@ const PartnerDetails = () => {
       const token = await user.getIdToken();
       
       // Send partner request
-      await axios.post('http://localhost:3001/api/partner-requests', {
+      await axios.post('http://localhost:4000/requests', {
         partnerId: partner._id,
-        partnerName: partner.name,
-        partnerImage: partner.profileimage,
-        subject: partner.subject,
-        studyMode: partner.studyMode,
-        requesterEmail: user.email
+        message: `I would like to study ${partner.subject} with you.`
       }, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -66,11 +62,7 @@ const PartnerDetails = () => {
       });
 
       // Increment partner count
-      await axios.patch(`http://localhost:3001/api/profiles/${partner._id}/increment`, {}, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+
 
       toast.success('Partner request sent successfully!');
       setPartner(prev => ({ ...prev, patnerCount: prev.patnerCount + 1 }));
@@ -94,17 +86,17 @@ const PartnerDetails = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Partner Not Found</h2>
-          <p className="text-gray-600">The partner profile you're looking for doesn't exist.</p>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Partner Not Found</h2>
+          <p className="text-gray-600 dark:text-gray-400">The partner profile you're looking for doesn't exist.</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 transition-colors">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
           {/* Header Section */}
           <div className="bg-indigo-600 px-8 py-12 text-center">
             <img
@@ -121,14 +113,14 @@ const PartnerDetails = () => {
           </div>
 
           {/* Details Section */}
-          <div className="px-8 py-8">
+          <div className="px-8 py-8 dark:bg-gray-800">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">
                   <FaGraduationCap className="text-indigo-600 text-xl" />
                   <div>
-                    <p className="text-sm font-medium text-gray-700">Experience Level</p>
-                    <p className="text-lg text-gray-900">{partner.experienceLevel}</p>
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Experience Level</p>
+                    <p className="text-lg text-gray-900 dark:text-white">{partner.experienceLevel}</p>
                   </div>
                 </div>
 

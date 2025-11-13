@@ -127,10 +127,19 @@ const FindPartners = () => {
     
     // Try to fetch from API in background
     try {
-      const response = await axios.get('http://localhost:3001/api/profiles');
-      const partnersData = response.data.profiles || response.data || [];
+      const response = await axios.get('http://localhost:4000/partners');
+      const partnersData = response.data || [];
       if (partnersData.length > 0) {
-        setPartners(partnersData);
+        // Transform backend data to match frontend format
+        const transformedData = partnersData.map(partner => ({
+          _id: partner._id,
+          name: partner.name,
+          profileimage: partner.profileimage || `https://ui-avatars.com/api/?name=${encodeURIComponent(partner.name)}&background=4f46e5&color=fff&size=150`,
+          subject: partner.subject,
+          studyMode: partner.studyMode || 'Online',
+          experienceLevel: partner.experienceLevel
+        }));
+        setPartners(transformedData);
       }
     } catch (error) {
       console.log('API not available, using mock data');
@@ -233,6 +242,9 @@ const FindPartners = () => {
                   src={partner.profileimage}
                   alt={partner.name}
                   className="w-20 h-20 rounded-full object-cover mx-auto mb-4"
+                  onError={(e) => {
+                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(partner.name)}&background=4f46e5&color=fff&size=150`;
+                  }}
                 />
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{partner.name}</h3>
                 <p className="text-indigo-600 font-medium mb-2">{partner.subject}</p>

@@ -38,27 +38,34 @@ const CreateProfile = () => {
     setLoading(true);
 
     try {
-      // Mock success for development
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const profileData = {
+        name: formData.name,
+        subject: formData.subject,
+        experienceLevel: formData.experienceLevel,
+        studyMode: formData.studyMode,
+        availability: formData.availabilityTime,
+        location: formData.location,
+        profileimage: formData.profileimage,
+        description: `${formData.subject} tutor with ${formData.experienceLevel} level experience. Available ${formData.availabilityTime} in ${formData.location}.`
+      };
       
-      // Try to save to backend in background
-      try {
-        const profileData = {
-          ...formData,
-          rating: 0,
-          patnerCount: 0
-        };
-        await axios.post('http://localhost:3001/api/profiles', profileData);
-        console.log('Profile saved to backend');
-      } catch (apiError) {
-        console.log('Backend not available, profile saved locally');
+      // Try with auth token first, fallback to no auth for development
+      let headers = {};
+      if (user) {
+        try {
+          const token = await user.getIdToken();
+          headers['Authorization'] = `Bearer ${token}`;
+        } catch (tokenError) {
+          console.log('Token error, proceeding without auth');
+        }
       }
       
+      await axios.post('http://localhost:4000/partners', profileData, { headers });
       toast.success('Profile created successfully!');
       navigate('/find-partners');
     } catch (error) {
-      toast.error('Failed to create profile');
-      console.error(error);
+      toast.error(error.message || 'Failed to create profile');
+      console.error('Profile creation error:', error);
     } finally {
       setLoading(false);
     }

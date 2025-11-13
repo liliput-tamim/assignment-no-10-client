@@ -112,11 +112,11 @@ const MyConnections = () => {
   };
 
   const handleUpdateSuccess = (updatedConnection) => {
-    setConnections(connections.map(conn => 
-      conn._id === updatedConnection._id ? updatedConnection : conn
-    ));
+    // Refresh connections after update
+    fetchConnections();
     setShowUpdateModal(false);
     setSelectedConnection(null);
+    toast.success('Connection updated successfully!');
   };
 
   if (loading) {
@@ -136,7 +136,7 @@ const MyConnections = () => {
 
         {connections.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">No connections found. Start by sending partner requests!</p>
+            <p className="text-gray-500 dark:text-gray-400 text-lg">No connections found. Start by sending partner requests!</p>
           </div>
         ) : (
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
