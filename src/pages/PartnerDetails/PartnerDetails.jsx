@@ -54,7 +54,9 @@ const PartnerDetails = () => {
       // Send partner request
       await axios.post('http://localhost:4000/requests', {
         partnerId: partner._id,
-        message: `I would like to study ${partner.subject} with you.`
+        message: `I would like to study ${partner.subject} with you.`,
+        senderEmail: user.email,
+        senderName: user.displayName || user.email
       }, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -67,6 +69,21 @@ const PartnerDetails = () => {
       toast.success('Partner request sent successfully!');
       setPartner(prev => ({ ...prev, patnerCount: prev.patnerCount + 1 }));
     } catch (error) {
+      // Try without auth if token fails
+      if (error.response?.status === 401) {
+        try {
+          await axios.post('http://localhost:4000/requests', {
+            partnerId: partner._id,
+            message: `I would like to study ${partner.subject} with you.`,
+            senderEmail: user?.email || 'anonymous@example.com',
+            senderName: user?.displayName || user?.email || 'Anonymous User'
+          });
+          toast.success('Partner request sent successfully!');
+          return;
+        } catch (retryError) {
+          console.error('Retry failed:', retryError);
+        }
+      }
       toast.error(error.response?.data?.message || 'Failed to send partner request');
       console.error(error);
     } finally {
