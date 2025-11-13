@@ -19,12 +19,25 @@ const MyConnections = () => {
   const fetchConnections = async () => {
     try {
       const token = await user.getIdToken();
-      const response = await axios.get('http://localhost:3001/api/partner-requests', {
+      const response = await axios.get(`http://localhost:4000/requests/${user.email}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      setConnections(response.data.requests || response.data);
+      
+      // Transform the data to match the expected format
+      const transformedConnections = response.data.map(request => ({
+        _id: request._id,
+        partnerName: request.partnerDetails?.name || 'Unknown Partner',
+        partnerImage: request.partnerDetails?.profileimage || `https://ui-avatars.com/api/?name=${encodeURIComponent(request.partnerDetails?.name || 'Unknown')}&background=4f46e5&color=fff&size=150`,
+        subject: request.partnerDetails?.subject || 'Unknown Subject',
+        studyMode: request.partnerDetails?.studyMode || 'Unknown Mode',
+        partnerId: request.partnerId,
+        message: request.message,
+        status: request.status
+      }));
+      
+      setConnections(transformedConnections);
     } catch (error) {
       console.error('Error fetching connections:', error);
       // Mock data for development
@@ -79,7 +92,7 @@ const MyConnections = () => {
     if (window.confirm('Are you sure you want to delete this connection?')) {
       try {
         const token = await user.getIdToken();
-        await axios.delete(`http://localhost:3001/api/partner-requests/${connectionId}`, {
+        await axios.delete(`http://localhost:4000/requests/${connectionId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -115,9 +128,9 @@ const MyConnections = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">
+        <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-900 dark:text-white mb-12">
           My Connections
         </h1>
 
@@ -126,7 +139,7 @@ const MyConnections = () => {
             <p className="text-gray-500 text-lg">No connections found. Start by sending partner requests!</p>
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
