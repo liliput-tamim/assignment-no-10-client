@@ -1,22 +1,10 @@
 const API_BASE_URL = 'http://localhost:4000';
 
-// Get auth token from Firebase
-const getAuthToken = async () => {
-  const user = JSON.parse(localStorage.getItem('user'));
-  if (user && user.accessToken) {
-    return user.accessToken;
-  }
-  return null;
-};
-
 // API request helper
 const apiRequest = async (endpoint, options = {}) => {
-  const token = await getAuthToken();
-  
   const config = {
     headers: {
       'Content-Type': 'application/json',
-      ...(token && { Authorization: `Bearer ${token}` }),
       ...options.headers,
     },
     ...options,
@@ -34,42 +22,39 @@ const apiRequest = async (endpoint, options = {}) => {
 
 // API functions
 export const api = {
-  // Partners
-  getPartners: (search = '', sort = '') => 
-    apiRequest(`/partners?search=${search}&sort=${sort}`),
+  // Study Sessions
+  getStudySessions: () => 
+    apiRequest('/study-sessions'),
   
-  getPartner: (id) => 
-    apiRequest(`/partners/${id}`),
+  getStudySession: (id) => 
+    apiRequest(`/study-sessions/${id}`),
   
-  getTopPartners: () => 
-    apiRequest('/partners/top-rated'),
+  createStudySession: (data) => 
+    apiRequest('/study-sessions', { method: 'POST', body: JSON.stringify(data) }),
   
-  createPartner: (data) => 
-    apiRequest('/partners', { method: 'POST', body: JSON.stringify(data) }),
+  updateStudySession: (id, data) => 
+    apiRequest(`/study-sessions/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   
-  updatePartner: (id, data) => 
-    apiRequest(`/partners/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-  
-  deletePartner: (id) => 
-    apiRequest(`/partners/${id}`, { method: 'DELETE' }),
+  deleteStudySession: (id) => 
+    apiRequest(`/study-sessions/${id}`, { method: 'DELETE' }),
 
-  // Requests
-  sendRequest: (data) => 
-    apiRequest('/requests', { method: 'POST', body: JSON.stringify(data) }),
+  // Bookings
+  createBooking: (data) => 
+    apiRequest('/bookings', { method: 'POST', body: JSON.stringify(data) }),
   
-  getMyRequests: (email) => 
-    apiRequest(`/requests/${email}`),
+  getUserBookings: (email) => 
+    apiRequest(`/bookings/${email}`),
   
-  updateRequest: (id, data) => 
-    apiRequest(`/requests/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  getAllBookings: () => 
+    apiRequest('/bookings'),
   
-  deleteRequest: (id) => 
-    apiRequest(`/requests/${id}`, { method: 'DELETE' }),
+  cancelBooking: (id) => 
+    apiRequest(`/bookings/${id}`, { method: 'DELETE' }),
 
-  // Profile
-  getProfile: (email) => 
-    apiRequest(`/profile/${email}`),
+  // Users
+  createUser: (data) => 
+    apiRequest('/users', { method: 'POST', body: JSON.stringify(data) }),
   
-  verifyAuth: () => 
-    apiRequest('/auth/verify', { method: 'POST' }),
+  getUser: (email) => 
+    apiRequest(`/users/${email}`),
 };

@@ -18,71 +18,48 @@ const MyConnections = () => {
 
   const fetchConnections = async () => {
     try {
-      const token = await user.getIdToken();
-      const response = await axios.get(`http://localhost:4000/requests/${user.email}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const userEmail = user?.email || 'anonymous@example.com';
+      console.log('🔍 Fetching connections for email:', userEmail);
+      
+      // First check all requests in database
+      try {
+        const allRequests = await axios.get('http://localhost:4000/requests/all');
+        console.log('📊 All requests in database:', allRequests.data);
+      } catch (debugError) {
+        console.log('Could not fetch all requests for debugging');
+      }
+      
+      const response = await axios.get(`http://localhost:4000/requests/${userEmail}`);
+      console.log('✅ API response for user:', response.data);
+      console.log('📈 Number of requests found:', response.data.length);
+      
+      if (response.data.length === 0) {
+        console.log('⚠️ No requests found for this user');
+        setConnections([]);
+        return;
+      }
       
       // Transform the data to match the expected format
-      const transformedConnections = response.data.map(request => ({
-        _id: request._id,
-        partnerName: request.partnerDetails?.name || 'Unknown Partner',
-        partnerImage: request.partnerDetails?.profileimage || `https://ui-avatars.com/api/?name=${encodeURIComponent(request.partnerDetails?.name || 'Unknown')}&background=4f46e5&color=fff&size=150`,
-        subject: request.partnerDetails?.subject || 'Unknown Subject',
-        studyMode: request.partnerDetails?.studyMode || 'Unknown Mode',
-        partnerId: request.partnerId,
-        message: request.message,
-        status: request.status
-      }));
+      const transformedConnections = response.data.map((request, index) => {
+        console.log(`🔄 Transforming request ${index + 1}:`, request);
+        return {
+          _id: request._id,
+          partnerName: request.partnerDetails?.name || 'Unknown Partner',
+          partnerImage: request.partnerDetails?.profileimage || `https://ui-avatars.com/api/?name=${encodeURIComponent(request.partnerDetails?.name || 'Unknown')}&background=4f46e5&color=fff&size=150`,
+          subject: request.partnerDetails?.subject || 'Unknown Subject',
+          studyMode: request.partnerDetails?.studyMode || 'Unknown Mode',
+          partnerId: request.partnerId,
+          message: request.message,
+          status: request.status
+        };
+      });
       
+      console.log('🎯 Final transformed connections:', transformedConnections);
       setConnections(transformedConnections);
     } catch (error) {
-      console.error('Error fetching connections:', error);
-      // Mock data for development
-      setConnections([
-        {
-          _id: '1',
-          partnerName: 'Sarah Johnson',
-          partnerImage: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
-          subject: 'Mathematics',
-          studyMode: 'Online',
-          partnerId: '1'
-        },
-        {
-          _id: '2',
-          partnerName: 'Mike Chen',
-          partnerImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
-          subject: 'Programming',
-          studyMode: 'Offline',
-          partnerId: '2'
-        },
-        {
-          _id: '3',
-          partnerName: 'Emily Davis',
-          partnerImage: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
-          subject: 'Biology',
-          studyMode: 'Online',
-          partnerId: '3'
-        },
-        {
-          _id: '4',
-          partnerName: 'Ahmed Hassan',
-          partnerImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face',
-          subject: 'Physics',
-          studyMode: 'Offline',
-          partnerId: '4'
-        },
-        {
-          _id: '5',
-          partnerName: 'Lisa Wang',
-          partnerImage: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
-          subject: 'Chemistry',
-          studyMode: 'Online',
-          partnerId: '5'
-        }
-      ]);
+      console.error('❌ Error fetching connections:', error);
+      console.error('Error details:', error.response?.data);
+      setConnections([]);
     } finally {
       setLoading(false);
     }
@@ -91,12 +68,7 @@ const MyConnections = () => {
   const handleDelete = async (connectionId) => {
     if (window.confirm('Are you sure you want to delete this connection?')) {
       try {
-        const token = await user.getIdToken();
-        await axios.delete(`http://localhost:4000/requests/${connectionId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
+        await axios.delete(`http://localhost:4000/requests/${connectionId}`);
         setConnections(connections.filter(conn => conn._id !== connectionId));
         toast.success('Connection deleted successfully!');
       } catch (error) {
@@ -141,26 +113,26 @@ const MyConnections = () => {
         ) : (
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Partner
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Subject
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Study Mode
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                   {connections.map((connection) => (
-                    <tr key={connection._id} className="hover:bg-gray-50">
+                    <tr key={connection._id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <img
@@ -172,14 +144,14 @@ const MyConnections = () => {
                             }}
                           />
                           <div>
-                            <div className="text-sm font-medium text-gray-900">
+                            <div className="text-sm font-medium text-gray-900 dark:text-white">
                               {connection.partnerName}
                             </div>
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{connection.subject}</div>
+                        <div className="text-sm text-gray-900 dark:text-white">{connection.subject}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
@@ -189,14 +161,14 @@ const MyConnections = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                         <button
                           onClick={() => handleUpdate(connection)}
-                          className="text-indigo-600 hover:text-indigo-900 inline-flex items-center"
+                          className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 inline-flex items-center"
                         >
                           <FaEdit className="mr-1" />
                           Update
                         </button>
                         <button
                           onClick={() => handleDelete(connection._id)}
-                          className="text-red-600 hover:text-red-900 inline-flex items-center"
+                          className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 inline-flex items-center"
                         >
                           <FaTrash className="mr-1" />
                           Delete

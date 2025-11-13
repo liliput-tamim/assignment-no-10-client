@@ -43,28 +43,18 @@ const CreateProfile = () => {
         subject: formData.subject,
         experienceLevel: formData.experienceLevel,
         studyMode: formData.studyMode,
-        availability: formData.availabilityTime,
+        availabilityTime: formData.availabilityTime,
         location: formData.location,
         profileimage: formData.profileimage,
+        email: formData.email,
         description: `${formData.subject} tutor with ${formData.experienceLevel} level experience. Available ${formData.availabilityTime} in ${formData.location}.`
       };
       
-      // Try with auth token first, fallback to no auth for development
-      let headers = {};
-      if (user) {
-        try {
-          const token = await user.getIdToken();
-          headers['Authorization'] = `Bearer ${token}`;
-        } catch (tokenError) {
-          console.log('Token error, proceeding without auth');
-        }
-      }
-      
-      await axios.post('http://localhost:4000/partners', profileData, { headers });
+      await axios.post('http://localhost:4000/partners', profileData);
       toast.success('Profile created successfully!');
       navigate('/find-partners');
     } catch (error) {
-      toast.error(error.message || 'Failed to create profile');
+      toast.error(error.response?.data?.error || 'Failed to create profile');
       console.error('Profile creation error:', error);
     } finally {
       setLoading(false);

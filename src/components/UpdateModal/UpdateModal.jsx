@@ -25,17 +25,12 @@ const UpdateModal = ({ connection, onClose, onSuccess }) => {
     setLoading(true);
 
     try {
-      const token = await user.getIdToken();
       // Update request with message field
       const updateData = {
         message: `Updated: ${formData.subject} - ${formData.studyMode}`
       };
       
-      await axios.put(`http://localhost:4000/requests/${connection._id}`, updateData, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      await axios.put(`http://localhost:4000/requests/${connection._id}`, updateData);
       
       onSuccess({ ...connection, ...formData });
     } catch (error) {
