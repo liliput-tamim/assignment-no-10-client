@@ -20,7 +20,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-white dark:bg-gray-800 shadow-lg sticky top-0 z-50 transition-colors">
+    <header className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm shadow-lg sticky top-0 z-50 transition-colors border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link to="/" className="flex items-center">
@@ -29,25 +29,25 @@ const Header = () => {
           
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 font-medium transition-colors">
+            <Link to="/" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 font-medium transition-colors px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
               Home
             </Link>
-            <Link to="/find-partners" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 font-medium transition-colors">
+            <Link to="/find-partners" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 font-medium transition-colors px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
               Find Partners
             </Link>
             
             {user ? (
               <>
-                <Link to="/create-profile" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 font-medium transition-colors">
-                  Create Partner Profile
+                <Link to="/create-profile" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 font-medium transition-colors px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+                  Create Profile
                 </Link>
-                <Link to="/my-connections" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 font-medium transition-colors">
-                  My Connections
+                <Link to="/my-connections" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 font-medium transition-colors px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+                  Connections
                 </Link>
                 
                 <button
                   onClick={toggleTheme}
-                  className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 hover:scale-105"
                   title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
                 >
                   {isDark ? <FaSun className="w-5 h-5 text-yellow-500" /> : <FaMoon className="w-5 h-5 text-gray-600" />}
@@ -55,7 +55,7 @@ const Header = () => {
                 
                 <div className="relative">
                   <button 
-                    className="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100 transition-colors"
+                    className="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 hover:scale-105"
                     onClick={() => setShowDropdown(!showDropdown)}
                   >
                     {user.photoURL ? (
@@ -67,17 +67,17 @@ const Header = () => {
                   </button>
                   
                   {showDropdown && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50">
+                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50 animate-in slide-in-from-top-2 duration-200">
                       <Link 
                         to="/profile" 
                         onClick={() => setShowDropdown(false)}
-                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors rounded-md mx-2"
                       >
                         Profile
                       </Link>
                       <button 
                         onClick={handleLogout}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors rounded-md mx-2"
                       >
                         Logout
                       </button>
@@ -89,13 +89,13 @@ const Header = () => {
               <div className="flex items-center space-x-4">
                 <Link 
                   to="/login" 
-                  className="text-indigo-600 hover:text-indigo-800 font-medium transition-colors"
+                  className="text-indigo-600 hover:text-indigo-800 font-medium transition-colors px-3 py-2 rounded-md hover:bg-indigo-50 dark:hover:bg-indigo-900/20"
                 >
                   Login
                 </Link>
                 <Link 
                   to="/register" 
-                  className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 font-medium transition-colors"
+                  className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 font-medium transition-all duration-200 hover:scale-105 shadow-md hover:shadow-lg"
                 >
                   Register
                 </Link>
@@ -117,17 +117,17 @@ const Header = () => {
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-gray-800 border-t dark:border-gray-700">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border-t dark:border-gray-700">
               <Link 
                 to="/" 
-                className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-indigo-600 font-medium"
+                className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-indigo-600 font-medium rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Home
               </Link>
               <Link 
                 to="/find-partners" 
-                className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-indigo-600 font-medium"
+                className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-indigo-600 font-medium rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Find Partners
