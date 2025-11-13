@@ -47,10 +47,14 @@ const Header = () => {
                 
                 <button
                   onClick={toggleTheme}
-                  className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 hover:scale-105"
+                  className="relative p-3 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg group"
                   title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
                 >
-                  {isDark ? <FaSun className="w-5 h-5 text-yellow-500" /> : <FaMoon className="w-5 h-5 text-gray-600" />}
+                  <div className="relative w-5 h-5">
+                    <FaSun className={`absolute inset-0 w-5 h-5 text-yellow-500 transition-all duration-300 ${isDark ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 rotate-180 scale-75'}`} />
+                    <FaMoon className={`absolute inset-0 w-5 h-5 text-indigo-600 transition-all duration-300 ${isDark ? 'opacity-0 -rotate-180 scale-75' : 'opacity-100 rotate-0 scale-100'}`} />
+                  </div>
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
                 </button>
                 
                 <div className="relative">
@@ -164,10 +168,15 @@ const Header = () => {
                   </button>
                   <button
                     onClick={toggleTheme}
-                    className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-indigo-600 font-medium"
+                    className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-indigo-600 font-medium rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 group"
                   >
-                    {isDark ? <FaSun className="w-4 h-4 mr-2" /> : <FaMoon className="w-4 h-4 mr-2" />}
-                    {isDark ? 'Light Mode' : 'Dark Mode'}
+                    <div className="relative w-4 h-4 mr-3">
+                      <FaSun className={`absolute inset-0 w-4 h-4 text-yellow-500 transition-all duration-300 ${isDark ? 'opacity-100 rotate-0' : 'opacity-0 rotate-180'}`} />
+                      <FaMoon className={`absolute inset-0 w-4 h-4 text-indigo-600 transition-all duration-300 ${isDark ? 'opacity-0 -rotate-180' : 'opacity-100 rotate-0'}`} />
+                    </div>
+                    <span className="group-hover:text-indigo-600 transition-colors duration-200">
+                      {isDark ? 'Light Mode' : 'Dark Mode'}
+                    </span>
                   </button>
                 </>
               ) : (
